@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="180" alt="Nova logo" src="https://github.com/user-attachments/assets/c060b2f9-7e9c-4d96-85a6-ca9940400e37" />
+</p>
+
 # Nova — Knowledge Galaxy System
 
 > Sistema de gestión de conocimiento colaborativo construido sobre Obsidian, Git y Claude Code.
