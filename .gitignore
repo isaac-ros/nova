@@ -1,0 +1,35 @@
+#planning
+nova.md
+
+# Entorno
+.env
+mcp-server/.env
+
+# Base de datos del MCP (generada localmente)
+mcp-server/nova.db
+mcp-server/nova.db-shm
+mcp-server/nova.db-wal
+
+# Node / Python
+mcp-server/node_modules/
+mcp-server/.venv/
+mcp-server/__pycache__/
+mcp-server/*.pyc
+mcp-server/dist/
+mcp-server/build/
+
+# Obsidian
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/cache
+.obsidian/plugins/obsidian-git/data.json
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp

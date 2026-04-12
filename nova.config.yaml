@@ -1,0 +1,73 @@
+vault_name: "Nova — Knowledge Galaxy"
+cumulo_default: equipo
+language: es
+
+# Mapeo type → carpeta en stars/
+# El MCP y los slash commands usan este mapeo — no mover archivos manualmente.
+type_folder_map:
+  concept:             stars/conceptos
+  adr:                 stars/decisiones
+  query:               stars/consultas
+  code:                stars/codigo
+  endpoint:            stars/endpoints
+  meeting:             stars/reuniones
+  project:             stars/proyectos
+  person:              stars/personas
+  system:              stars/sistemas
+  dataset:             stars/datos
+  database:            stars/datos
+  table:               stars/datos
+  pipeline:            stars/datos
+  dashboard_spec:      stars/specs
+  brd:                 stars/specs
+  runbook:             stars/runbooks
+  changelog:           stars/registros
+  claude_conversation: stars/registros
+
+# Fases del lifecycle de una estrella
+phases:
+  - nebula       # inbox/ — contenido crudo sin procesar
+  - formacion    # inbox/ — procesado por Claude, pendiente de aprobación humana
+  - activa       # stars/ — conocimiento vigente y verificado
+  - muriendo     # stars/ — deprecado, tratar con cautela
+  - muerta       # archive/ — archivado, peso mínimo en búsqueda
+  - remanente    # archive/ — fusionada en otra estrella, solo redirect
+
+# Cúmulos activos — editar según los equipos/áreas de tu organización
+# Ejemplo: bi, infraestructura, rpa, negocio, corporativo
+cumulos:
+  - equipo
+
+# Constelaciones semilla — reemplazar con las de tu organización
+# Ver constellations/ para los archivos MOC correspondientes
+seed_constellations: []
+
+# Tipos que se enriquecen con LLM durante /nebula-process
+llm_enrichment_types:
+  - query
+  - code
+  - endpoint
+
+# Tipos que se indexan completos (sin chunking)
+full_index_types:
+  - query
+  - code
+  - endpoint
+  - adr
+
+# Tipos que se indexan por chunks
+chunked_index_types:
+  - concept
+  - dataset
+  - database
+  - table
+  - pipeline
+  - brd
+  - dashboard_spec
+  - meeting
+  - project
+  - runbook
+  - changelog
+  - claude_conversation
+  - system
+  - person
