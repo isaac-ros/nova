@@ -154,8 +154,8 @@ nova-vault/
 ## Fases de implementación
 
 - **Fase 1 — Fundación** ✅ Vault listo con estructura, templates y comandos
-- **Fase 2 — Claude Commands** Poblar y mantener el vault sin MCP
-- **Fase 3 — Big Bang** Migrar conocimiento existente
+- **Fase 2 — Claude Commands** ✅ Poblar y mantener el vault sin MCP
+- **Fase 3 — Big Bang** ✅ Migrar conocimiento existente
 - **Fase 4 — El Telescopio** MCP server con búsqueda híbrida
 - **Fase 5 — Expansión** Equipo completo, múltiples cúmulos
 
