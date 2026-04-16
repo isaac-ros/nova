@@ -110,7 +110,7 @@ summary: "Qué hace este endpoint + qué servicio lo expone. Máx 2 oraciones."
 - Archivos: `kebab-case.md` — sin espacios, sin caracteres especiales, sin tildes en el nombre del archivo
 - Títulos en el documento: español (o el idioma del vault), con tildes si aplica
 - Tags: `snake_case`
-- Wikilinks: `[[Nombre Exacto de la Estrella]]` — el nombre del título H1 del archivo destino
+- Wikilinks: `[[kebab-case]]` — usar nombre del archivo, no título H1
 
 ---
 
