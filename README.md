@@ -4,161 +4,164 @@
 
 # Nova — Knowledge Galaxy System
 
-> Sistema de gestión de conocimiento colaborativo construido sobre Obsidian, Git y Claude Code.
+> A collaborative knowledge management system built on Obsidian, Git, and Claude Code.
 
 ## TL;DR
 
-Tu equipo tiene conocimiento disperso: 10 proyectos de github, scripts en carpetas compartidas, decisiones en la cabeza de una sola persona, documentación desactualizada en wikis que nadie lee. Cada desarrollador trabaja con su propio contexto — sin visibilidad de las decisiones del resto, sin saber qué ya existe, repitiendo trabajo o contradiciendo lo que alguien ya resolvió.
+Your team's knowledge is scattered: 10 GitHub projects, scripts in shared folders, decisions living in one person's head, outdated documentation in wikis nobody reads. Every developer works with their own context — no visibility into others' decisions, no way to know what already exists, repeating work or contradicting what someone already solved.
 
-**Nova es una fuente única de verdad para el conocimiento del equipo, diseñada para ser consumida por LLMs.**
+**Nova is a single source of truth for your team's knowledge, designed to be consumed by LLMs.**
 
-Tres desarrolladores trabajando en el mismo repo comparten el mismo vault: las decisiones de arquitectura de uno son contexto para los otros dos, los queries documentados evitan que alguien rehaga lo que ya existe, y cuando cualquiera le pregunta algo a Claude, Claude responde con el conocimiento real del equipo — no con suposiciones genéricas.
+Three developers working in the same repo share the same vault: one person's architecture decisions become context for the other two, documented queries prevent someone from redoing what already exists, and whenever anyone asks Claude something, Claude responds with the team's actual knowledge — not generic assumptions.
 
-El vault vive en Git como archivos markdown. Claude Code actúa como el bibliotecario: clasifica, enriquece, conecta y mantiene el conocimiento estructurado. El MCP server (el telescopio) permite que Claude busque en el vault semánticamente sin cargar todo al contexto.
+The vault lives in Git as markdown files. Claude Code acts as the librarian: it classifies, enriches, connects, and maintains structured knowledge. The MCP server (the telescope) lets Claude search the vault semantically without loading everything into context.
 
-**El flujo básico:**
-1. Depositas contenido crudo en `inbox/` — un `.sql`, un `.py`, una decisión de arquitectura, una minuta
-2. Ejecutas `/nebula-process` y Claude lo convierte en una nota estructurada con metadata, summary y links a notas relacionadas
-3. Revisas y apruebas cambiando `fase: formacion` → `fase: activa`
-4. La nota vive en `stars/`, aparece en las constelaciones correctas, y cualquier miembro del equipo — o Claude en cualquier conversación futura — puede encontrarla
+**The basic flow:**
 
-**¿Tienes conocimiento existente que migrar?** Ejecuta `/big-bang`: deposita tu contenido en `inbox/` en lotes, Claude lo procesa en masa con tu supervisión, y en unas horas tienes el vault poblado.
+1. Drop raw content into `inbox/` — a `.sql`, a `.py`, an architecture decision, meeting notes
+2. Run `/nebula-process` and Claude turns it into a structured note with metadata, a summary, and links to related notes
+3. Review and approve by changing `phase: formation` → `phase: active`
+4. The note lives in `stars/`, appears in the right constellations, and any team member — or Claude in any future conversation — can find it
 
-Nova funciona **sin el MCP server** desde el día uno — Claude Code + los slash commands son suficientes para poblar y navegar el vault. El MCP (búsqueda semántica) es una mejora que se agrega en Fase 4.
+**Got existing knowledge to migrate?** Run `/big-bang`: drop your content into `inbox/` in batches, Claude processes it in bulk under your supervision, and within a few hours your vault is populated.
 
-## Inicio rápido
+Nova works **without the MCP server** from day one — Claude Code + slash commands are enough to populate and navigate the vault. The MCP (semantic search) is an enhancement added in Phase 4.
 
-1. **Clona este repositorio** como tu vault
-2. Copia `.env.example` → `.env` y configura tus API keys
-3. Abre la carpeta en Obsidian
-4. Edita `nova.config.yaml` con el nombre de tu organización y tus cúmulos
-5. Crea tus constelaciones semilla en `constellations/`
-6. Empieza a depositar conocimiento en `inbox/` y ejecuta `/nebula-process`
+## Quick Start
 
-## La metáfora espacial
+1. **Clone this repository** as your vault
+2. Copy `.env.example` → `.env` and configure your API keys
+3. Open the folder in Obsidian
+4. Edit `nova.config.yaml` with your organization's name and clusters
+5. Create your seed constellations in `constellations/`
+6. Start dropping knowledge into `inbox/` and run `/nebula-process`
 
-| Metáfora | Qué es |
-|---|---|
-| **Estrella** | Una nota atómica — una sola idea, query, decisión o concepto |
-| **Constelación** | Un mapa de contenido (MOC) que agrupa estrellas por tema o perspectiva |
-| **Sistema** | Un área funcional o equipo (BI, Infraestructura, RPA...) |
-| **Galaxia** | Todo el vault — el universo completo del conocimiento |
-| **Nebulosa** | El inbox — contenido crudo aún sin procesar |
-| **Gravedad** | Los links entre estrellas. Más conexiones = más masa gravitacional |
-| **Materia Oscura** | Conexiones implícitas que aún no se han creado explícitamente |
-| **Agujero de Gusano** | Link cross-área de alta importancia, siempre visible en búsquedas |
-| **Polvo Estelar** | El frontmatter — metadata que permite buscar y clasificar |
+## The Space Metaphor
 
-## Navegación
+| Metaphor | What it is |
+| --- | --- |
+| **Star** | An atomic note — a single idea, query, decision, or concept |
+| **Constellation** | A map of content (MOC) that groups stars by topic or perspective |
+| **System** | A functional area or team (BI, Infrastructure, RPA...) |
+| **Galaxy** | The entire vault — the complete universe of knowledge |
+| **Nebula** | The inbox — raw content not yet processed |
+| **Gravity** | Links between stars. More connections = more gravitational mass |
+| **Dark Matter** | Implicit connections not yet explicitly created |
+| **Wormhole** | A high-importance cross-area link, always visible in searches |
+| **Star Dust** | The frontmatter — metadata that enables search and classification |
 
-**No empieces por las carpetas. Empieza por tu constelación.**
+## Navigation
 
-Cada constelación es un mapa del conocimiento desde una perspectiva específica. Abre `constellations/` y busca la que corresponde a tu área o proyecto. Desde ahí encontrarás links a todas las estrellas relevantes.
+**Don't start with the folders. Start with your constellation.**
 
-## Contribuir conocimiento
+Each constellation is a knowledge map from a specific perspective. Open `constellations/` and find the one that matches your area or project. From there you'll find links to all the relevant stars.
 
-### Ruta rápida — nebulosa
-1. Copia tu query, script, idea o documento en `inbox/`
-2. Ejecuta `/nebula-process` en Claude Code
-3. Claude clasifica, estructura y enriquece el contenido
-4. Tú revisas y apruebas — la estrella pasa a `activa` y se mueve a `stars/`
+## Contributing Knowledge
 
-### Ruta directa — crear estrella
-1. Copia el template desde `templates/[tipo].md`
-2. Llena el frontmatter completo
-3. Escribe el contenido
-4. Guarda en la subcarpeta correcta de `stars/`
+### Fast route — nebula
 
-## Lifecycle de una estrella
+1. Copy your query, script, idea, or document into `inbox/`
+2. Run `/nebula-process` in Claude Code
+3. Claude classifies, structures, and enriches the content
+4. You review and approve — the star moves to `active` and is placed in `stars/`
 
-```
-nebula → formacion → activa → muriendo → muerta
-                        ↑                   │
-                        └───────────────────┘  (reactivable)
-                                  remanente (si fue fusionada)
-```
+### Direct route — create a star
 
-| Fase | Ubicación | Qué significa |
-|---|---|---|
-| `nebula` | `inbox/` | Contenido crudo, sin procesar |
-| `formacion` | `inbox/` | Procesado por Claude, esperando aprobación |
-| `activa` | `stars/` | Conocimiento vigente y verificado |
-| `muriendo` | `stars/` | Deprecado — tratar con cautela |
-| `muerta` | `archive/` | Archivado, rankea muy bajo en búsquedas |
-| `remanente` | `archive/` | Fusionada en otra estrella, redirige a la nueva |
+1. Copy the template from `templates/[type].md`
+2. Fill in the complete frontmatter
+3. Write the content
+4. Save it in the correct subfolder under `stars/`
 
-## Comandos de Claude Code
-
-| Comando | Qué hace |
-|---|---|
-| `/nebula-process` | Procesa el inbox: clasifica, enriquece y estructura estrellas |
-| `/supernova` | Re-enriquece una estrella activa que fue modificada |
-| `/dark-matter` | Health check: detecta huérfanas, duplicados, links faltantes |
-| `/fusion` | Fusiona estrellas duplicadas o parciales en una sola |
-| `/big-bang` | Migración masiva supervisada desde fuentes externas |
-
-## Convención de commits
+## Star Lifecycle
 
 ```
-[star] descripción de la estrella creada o modificada
-[constellation] qué constelación se actualizó
-[fix] corrección de links rotos o frontmatter incorrecto
-[fusion] resultado de fusión de estrellas
-[big-bang] ingesta masiva desde fuente externa
+nebula → formation → active → dying → dead
+                        ↑                │
+                        └────────────────┘  (reactivatable)
+                                remnant (if merged)
 ```
 
-## Estructura de carpetas
+| Phase | Location | What it means |
+| --- | --- | --- |
+| `nebula` | `inbox/` | Raw content, unprocessed |
+| `formation` | `inbox/` | Processed by Claude, awaiting approval |
+| `active` | `stars/` | Current, verified knowledge |
+| `dying` | `stars/` | Deprecated — treat with caution |
+| `dead` | `archive/` | Archived, ranks very low in searches |
+| `remnant` | `archive/` | Merged into another star, redirects to the new one |
+
+## Claude Code Commands
+
+| Command | What it does |
+| --- | --- |
+| `/nebula-process` | Processes the inbox: classifies, enriches, and structures stars |
+| `/supernova` | Re-enriches an active star that has been modified |
+| `/dark-matter` | Health check: detects orphans, duplicates, missing links |
+| `/fusion` | Merges duplicate or partial stars into one |
+| `/big-bang` | Supervised bulk migration from external sources |
+
+## Commit Convention
+
+```
+[star] description of the star created or modified
+[constellation] which constellation was updated
+[fix] correction of broken links or incorrect frontmatter
+[fusion] result of a star merge
+[big-bang] bulk ingestion from an external source
+```
+
+## Folder Structure
 
 ```
 nova-vault/
-├── CLAUDE.md              # Reglas del sistema para Claude Code
-├── nova.config.yaml       # Configuración del vault (editar al instalar)
-├── .env.example           # Variables de entorno (copiar a .env con tus keys)
-├── inbox/                 # Nebulosa — deposita aquí contenido crudo
+├── CLAUDE.md              # System rules for Claude Code
+├── nova.config.yaml       # Vault configuration (edit on install)
+├── .env.example           # Environment variables (copy to .env with your keys)
+├── inbox/                 # Nebula — drop raw content here
 ├── stars/
-│   ├── conceptos/         # Definiciones y conceptos de negocio
-│   ├── decisiones/        # ADRs — decisiones con contexto y razones
-│   ├── consultas/         # Queries SQL, DAX
-│   ├── codigo/            # Scripts, notebooks, funciones
-│   ├── endpoints/         # APIs consumidas o expuestas
-│   ├── reuniones/         # Minutas y notas de reunión
-│   ├── proyectos/         # Iniciativas y proyectos activos
-│   ├── personas/          # Directorio del equipo
-│   ├── sistemas/          # Documentación de sistemas
-│   ├── datos/             # Datasets, bases de datos, tablas, pipelines
-│   ├── specs/             # Especificaciones y BRDs
-│   ├── runbooks/          # Procedimientos operativos
-│   └── registros/         # Changelogs y conversaciones con Claude
-├── constellations/        # Mapas de contenido — navega desde aquí
-├── templates/             # Templates por tipo de estrella
-├── archive/               # Estrellas muertas o remanentes
-└── mcp-server/            # Telescopio — MCP server (Fase 4)
+│   ├── concepts/          # Business definitions and concepts
+│   ├── decisions/         # ADRs — decisions with context and rationale
+│   ├── queries/           # SQL, DAX queries
+│   ├── code/              # Scripts, notebooks, functions
+│   ├── endpoints/         # APIs consumed or exposed
+│   ├── meetings/          # Meeting minutes and notes
+│   ├── projects/          # Active initiatives and projects
+│   ├── people/            # Team directory
+│   ├── systems/           # System documentation
+│   ├── data/              # Datasets, databases, tables, pipelines
+│   ├── specs/             # Specifications and BRDs
+│   ├── runbooks/          # Operational procedures
+│   └── records/           # Changelogs and Claude conversations
+├── constellations/        # Content maps — navigate from here
+├── templates/             # Templates by star type
+├── archive/               # Dead or remnant stars
+└── mcp-server/            # Telescope — MCP server (Phase 4)
 ```
 
-## Configuración de Obsidian
+## Obsidian Configuration
 
-- **Excluded files**: agregar `mcp-server` en Settings → Files & Links → Excluded files
-- **Plugins recomendados**: Dataview, Templater, obsidian-git, Graph Analysis
+* **Excluded files**: add `mcp-server` under Settings → Files & Links → Excluded files
+* **Recommended plugins**: Dataview, Templater, obsidian-git, Graph Analysis
 
-## Stack técnico
+## Tech Stack
 
-| Componente | Herramienta |
-|---|---|
-| Interfaz de usuario | Obsidian |
-| Versionado | Git + GitHub |
-| Agente de procesamiento | Claude Code |
-| Reglas del sistema | CLAUDE.md |
-| Flujos reutilizables | Slash commands en `.claude/commands/` |
-| Búsqueda semántica (Fase 4) | MCP server — SQLite + FTS5 + embeddings |
+| Component | Tool |
+| --- | --- |
+| User interface | Obsidian |
+| Version control | Git + GitHub |
+| Processing agent | Claude Code |
+| System rules | CLAUDE.md |
+| Reusable flows | Slash commands in `.claude/commands/` |
+| Semantic search (Phase 4) | MCP server — SQLite + FTS5 + embeddings |
 
-## Fases de implementación
+## Implementation Phases
 
-- **Fase 1 — Fundación** ✅ Vault listo con estructura, templates y comandos
-- **Fase 2 — Claude Commands** ✅ Poblar y mantener el vault sin MCP
-- **Fase 3 — Big Bang** ✅ Migrar conocimiento existente
-- **Fase 4 — El Telescopio** MCP server con búsqueda híbrida
-- **Fase 5 — Expansión** Equipo completo, múltiples cúmulos
+* **Phase 1 — Foundation** ✅ Vault ready with structure, templates, and commands
+* **Phase 2 — Claude Commands** ✅ Populate and maintain the vault without MCP
+* **Phase 3 — Big Bang** ✅ Migrate existing knowledge
+* **Phase 4 — The Telescope** (in progress) MCP server with hybrid search
+* **Phase 5 — Expansion** Full team, multiple clusters
 
 ---
 
-*Nova es el conocimiento del equipo. Cada estrella que agregas hace la galaxia más brillante para todos.*
+*Nova is your team's knowledge. Every star you add makes the galaxy brighter for everyone.*
