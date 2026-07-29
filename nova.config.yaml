@@ -27,7 +27,7 @@ type_folder_map:
 # Fases del lifecycle de una estrella
 phases:
   - nebula       # inbox/ — contenido crudo sin procesar
-  - formacion    # inbox/ — procesado por Claude, pendiente de aprobación humana
+  - formacion    # stars/ — procesado por Claude en su carpeta destino, pendiente de aprobación humana (/aprobar)
   - activa       # stars/ — conocimiento vigente y verificado
   - muriendo     # stars/ — deprecado, tratar con cautela
   - muerta       # archive/ — archivado, peso mínimo en búsqueda
@@ -41,6 +41,14 @@ cumulos:
 # Constelaciones semilla — reemplazar con las de tu organización
 # Ver constellations/ para los archivos MOC correspondientes
 seed_constellations: []
+
+# Umbrales de health check (usados por /dark-matter)
+health_thresholds:
+  ORPHAN_ALERT_DAYS: 7
+  STALE_DRAFT_DAYS: 30
+  FUSION_THRESHOLD: 0.9
+  CONSTELLATION_MAX_STARS: 35
+  CONSTELLATION_MIN_CLUSTER: 5
 
 # Tipos que se enriquecen con LLM durante /nebula-process
 llm_enrichment_types:

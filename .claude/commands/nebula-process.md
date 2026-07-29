@@ -88,9 +88,8 @@ Si hay archivos ambiguos o con conflictos que no puedes resolver, repórtalos po
 ### 8. Aprobación humana
 
 Recuerda al usuario:
-- Los archivos en `inbox/` con `fase: formacion` están listos para revisión
-- Para aprobar una estrella: cambiar `fase: formacion` a `fase: activa` en el frontmatter
-- O ejecutar: `/nebula-process aprobar [nombre-archivo]` para que Claude haga el cambio
+- Las estrellas con `fase: formacion` (ya en su carpeta destino) están listas para revisión
+- Para aprobar y publicar: `/aprobar [nombre-archivo]` (cambia la fase, hace commit y push)
 
 ---
 

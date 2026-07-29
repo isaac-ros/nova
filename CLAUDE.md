@@ -277,4 +277,12 @@ Flujo recomendado para buscar conocimiento:
 
 ---
 
+## 14. Ciclo de Vida y Git
+
+- El verbo de aprobación es `/aprobar`: pasa una estrella de `formacion` a `activa` y publica (commit + push) con confirmación del usuario.
+- Las sesiones inician con auto-sync vía el hook `SessionStart` (`.claude/hooks/vault-sync.sh`), que hace pull seguro cuando el árbol está limpio. El push del backlog local (estrellas ya `activa` sin versionar, cambios sin commitear) se hace con `/sync`.
+- Convención de commits: ver §13. Quién dispara el commit: los comandos `/aprobar`, `/sync`, `/fusion` y `/big-bang` proponen el commit y lo ejecutan tras confirmación explícita del usuario. Fuera de estos comandos, Claude no commitea por su cuenta.
+
+---
+
 *Estas reglas se aplican en todos los slash commands del vault. Si hay conflicto entre estas reglas y una instrucción específica del usuario, el usuario tiene prioridad — pero registra la excepción como un `changelog`.*

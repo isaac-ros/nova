@@ -20,15 +20,15 @@ Busca estrellas en `stars/` con `fase: activa` que:
 - No tienen ningún link saliente (`dependencies` vacío Y sin wikilinks `[[]]` en el cuerpo)
 - No tienen ningún link entrante (ninguna otra nota las referencia)
 
-Umbral: reportar si llevan más de `ORPHAN_ALERT_DAYS` días sin conexiones (default: 7 días).
+Umbral: reportar si llevan más de `ORPHAN_ALERT_DAYS` días sin conexiones (ver `health_thresholds` en `nova.config.yaml`).
 
 ### Check 2: Estrellas stale en formacion
 
-Busca archivos en `inbox/` con `fase: formacion` cuyo `created` o `updated` tiene más de `STALE_DRAFT_DAYS` días (default: 30 días) sin aprobarse.
+Busca en `stars/` (todas las subcarpetas) archivos con `fase: formacion` cuyo `created` o `updated` tenga más de `STALE_DRAFT_DAYS` días (ver `health_thresholds` en `nova.config.yaml`). Estas están listas para revisión: sugiere `/aprobar`.
 
 ### Check 3: Candidatos a Fusión Estelar
 
-Busca pares de estrellas con similitud semántica >= `FUSION_THRESHOLD` (default: 0.9).
+Busca pares de estrellas con similitud semántica >= `FUSION_THRESHOLD` (ver `health_thresholds` en `nova.config.yaml`).
 
 Si el MCP está disponible: usa `report_dark_matter(check_fusion_candidates=true)`.
 
@@ -42,7 +42,7 @@ Busca pares de estrellas con 3+ tags en común que no están conectadas entre s�
 
 ### Check 5: Constelaciones en mal estado
 
-**Sobrepobladas**: constelaciones con más de `CONSTELLATION_MAX_STARS` estrellas (default: 35) → sugerir dividir.
+**Sobrepobladas**: constelaciones con más de `CONSTELLATION_MAX_STARS` estrellas (ver `health_thresholds` en `nova.config.yaml`) → sugerir dividir.
 
 **Vacías o infrapobladas**: constelaciones con menos de 3 estrellas → sugerir fusionar con otra o eliminar.
 
@@ -50,7 +50,7 @@ Busca pares de estrellas con 3+ tags en común que no están conectadas entre s�
 
 ### Check 6: Constelaciones emergentes
 
-Detecta clusters de estrellas que comparten múltiples tags y no tienen constelación propia, con al menos `CONSTELLATION_MIN_CLUSTER` estrellas (default: 5).
+Detecta clusters de estrellas que comparten múltiples tags y no tienen constelación propia, con al menos `CONSTELLATION_MIN_CLUSTER` estrellas (ver `health_thresholds` en `nova.config.yaml`).
 
 Para cada cluster, propone:
 - Nombre sugerido de la constelación (inferido de los tags comunes)
@@ -81,7 +81,7 @@ Por ahora: busca estrellas de `stars/consultas/` que referencian a `stars/sistem
 - [[estrella-huerfana]] — X días sin conexiones
 
 ## 🔴 Estrellas stale en formacion (X)
-- [[archivo]] — X días sin aprobarse
+- [[archivo]] — X días sin aprobarse → sugerir `/aprobar`
 
 ## 🟡 Candidatos a Fusión Estelar (X pares / Y clusters)
 - [[estrella-a]] ↔ [[estrella-b]] — similitud: 0.94

@@ -81,20 +81,14 @@ Presenta un dashboard de lo procesado:
 | test.sql | Archivo de prueba, sin valor de conocimiento |
 
 ---
-Acción: Revisa los archivos en inbox/ con fase: formacion.
-Para aprobar en bulk: /big-bang aprobar-lote
-Para aprobar individual: cambiar fase en el frontmatter del archivo.
+Acción: Revisa las estrellas en fase: formacion (ya están en su carpeta destino).
+Para aprobar en bulk: /aprobar todas
+Para aprobar individual: /aprobar [nombre-archivo]
 ```
 
 ### Fase 5: Aprobación en bulk
 
-Cuando el usuario ejecuta `/big-bang aprobar-lote`:
-
-1. Lista todas las estrellas en `inbox/` con `fase: formacion` del batch actual
-2. Muestra un resumen rápido de cada una (título + summary)
-3. Pregunta: "¿Aprobamos todas o quieres revisar algunas individualmente?"
-4. Si aprueba todas: cambia `fase: formacion → activa` y mueve cada archivo a su carpeta correcta según `nova.config.yaml`
-5. Actualiza las constelaciones correspondientes
+La aprobación en bulk del batch se delega a `/aprobar todas` — ese comando cambia `fase: formacion → activa` en su lugar (los archivos ya están en su carpeta destino desde `/nebula-process`, no se mueven de nuevo), y hace el commit + push del lote con confirmación.
 
 ### Fase 6: Reporte final
 
@@ -112,8 +106,8 @@ Cuando el usuario ejecuta `/big-bang aprobar-lote`:
 
 ## Próximos pasos sugeridos
 1. Ejecutar /dark-matter para detectar conexiones faltantes entre las nuevas estrellas
-2. Revisar las X estrellas pendientes de aprobación en inbox/
-3. Git commit: [big-bang] ingesta [fuente] — X estrellas creadas
+2. Revisar las X estrellas pendientes de aprobación (`fase: formacion`, ya en su carpeta destino) — usar `/aprobar`
+3. El commit del lote se hace vía `/aprobar todas`; convención: [star] aprobar: N estrellas
 ```
 
 ---
