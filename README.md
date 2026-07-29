@@ -6,6 +6,8 @@
 
 > A collaborative knowledge management system built on Obsidian, Git, and Claude Code.
 
+> **Joining a vault that's already set up?** This README covers installation and system design. For day-to-day usage, see [INSTRUCCIONES.md](INSTRUCCIONES.md) (Spanish).
+
 ## TL;DR
 
 Your team's knowledge is scattered: 10 GitHub projects, scripts in shared folders, decisions living in one person's head, outdated documentation in wikis nobody reads. Every developer works with their own context — no visibility into others' decisions, no way to know what already exists, repeating work or contradicting what someone already solved.
@@ -20,7 +22,7 @@ The vault lives in Git as markdown files. Claude Code acts as the librarian: it 
 
 1. Drop raw content into `inbox/` — a `.sql`, a `.py`, an architecture decision, meeting notes
 2. Run `/nebula-process` and Claude turns it into a structured note with metadata, a summary, and links to related notes
-3. Review and approve by changing `phase: formation` → `phase: active`
+3. Review and approve by running `/aprobar` (moves `phase: formation` → `phase: active`, then commits and pushes)
 4. The note lives in `stars/`, appears in the right constellations, and any team member — or Claude in any future conversation — can find it
 
 **Got existing knowledge to migrate?** Run `/big-bang`: drop your content into `inbox/` in batches, Claude processes it in bulk under your supervision, and within a few hours your vault is populated.
@@ -84,7 +86,7 @@ nebula → formation → active → dying → dead
 | Phase | Location | What it means |
 | --- | --- | --- |
 | `nebula` | `inbox/` | Raw content, unprocessed |
-| `formation` | `inbox/` | Processed by Claude, awaiting approval |
+| `formation` | `stars/` | Processed by Claude, already in its destination folder, awaiting approval via `/aprobar` |
 | `active` | `stars/` | Current, verified knowledge |
 | `dying` | `stars/` | Deprecated — treat with caution |
 | `dead` | `archive/` | Archived, ranks very low in searches |
@@ -95,6 +97,8 @@ nebula → formation → active → dying → dead
 | Command | What it does |
 | --- | --- |
 | `/nebula-process` | Processes the inbox: classifies, enriches, and structures stars |
+| `/aprobar` | Approves a star (`formation` → `active`) and publishes it: commit + push with confirmation |
+| `/sync` | Pulls the team's changes and publishes your local backlog |
 | `/supernova` | Re-enriches an active star that has been modified |
 | `/dark-matter` | Health check: detects orphans, duplicates, missing links |
 | `/fusion` | Merges duplicate or partial stars into one |
