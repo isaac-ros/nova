@@ -4,7 +4,9 @@
 
 # Nova — Knowledge Galaxy System
 
-> A collaborative knowledge management system built on Obsidian, Git, and Claude Code.
+> A local-first knowledge management system built on Obsidian, Git, and Claude Code.
+
+**Nova runs in local mode.** The vault lives only on your machine: no remote, no cloud sync, no external services. Git is used only to keep history on disk, and Claude Code is blocked from `push`, `pull`, `fetch`, `remote`, `clone` and `gh` through `.claude/settings.json`. See `CLAUDE.md` §14.
 
 > **Joining a vault that's already set up?** This README covers installation and system design. For day-to-day usage, see [INSTRUCCIONES.md](INSTRUCCIONES.md) (Spanish).
 
@@ -14,15 +16,15 @@ Your team's knowledge is scattered: 10 GitHub projects, scripts in shared folder
 
 **Nova is a single source of truth for your team's knowledge, designed to be consumed by LLMs.**
 
-Three developers working in the same repo share the same vault: one person's architecture decisions become context for the other two, documented queries prevent someone from redoing what already exists, and whenever anyone asks Claude something, Claude responds with the team's actual knowledge — not generic assumptions.
+Architecture decisions get written down, documented queries prevent redoing what already exists, and whenever you ask Claude something, Claude responds with the actual knowledge accumulated in the vault — not generic assumptions.
 
-The vault lives in Git as markdown files. Claude Code acts as the librarian: it classifies, enriches, connects, and maintains structured knowledge. The MCP server (the telescope) lets Claude search the vault semantically without loading everything into context.
+The vault is markdown files on disk, versioned with a local Git repository. Claude Code acts as the librarian: it classifies, enriches, connects, and maintains structured knowledge. The MCP server (the telescope) lets Claude search the vault semantically without loading everything into context.
 
 **The basic flow:**
 
 1. Drop raw content into `inbox/` — a `.sql`, a `.py`, an architecture decision, meeting notes
 2. Run `/nebula-process` and Claude turns it into a structured note with metadata, a summary, and links to related notes
-3. Review and approve by running `/aprobar` (moves `phase: formation` → `phase: active`, then commits and pushes)
+3. Audit pending stars with `/formacion`, then approve with `/aprobar` (moves `phase: formation` → `phase: active` and makes a local commit)
 4. The note lives in `stars/`, appears in the right constellations, and any team member — or Claude in any future conversation — can find it
 
 **Got existing knowledge to migrate?** Run `/big-bang`: drop your content into `inbox/` in batches, Claude processes it in bulk under your supervision, and within a few hours your vault is populated.
@@ -65,7 +67,8 @@ Each constellation is a knowledge map from a specific perspective. Open `constel
 1. Copy your query, script, idea, or document into `inbox/`
 2. Run `/nebula-process` in Claude Code
 3. Claude classifies, structures, and enriches the content
-4. You review and approve — the star moves to `active` and is placed in `stars/`
+4. The star lands in `formation`, already in its destination folder under `stars/`
+5. You review and approve with `/aprobar` — the star moves to `active` without changing folders
 
 ### Direct route — create a star
 
@@ -96,15 +99,18 @@ nebula → formation → active → dying → dead
 
 | Command | What it does |
 | --- | --- |
-| `/nebula-process` | Processes the inbox: classifies, enriches, and structures stars |
-| `/aprobar` | Approves a star (`formation` → `active`) and publishes it: commit + push with confirmation |
-| `/sync` | Pulls the team's changes and publishes your local backlog |
+| `/nebula-process` | Processes the inbox: classifies, enriches, normalizes terms with the glossary, and reports supernova candidates |
+| `/formacion` | Read-only audit of stars in `formation`: importance, grounding signals, and quality gate before approval |
+| `/aprobar` | Approves a star (`formation` → `active`) and records it with a local commit after confirmation |
+| `/read-ai-sync` | Pulls new Read.ai meetings: archives the original in `archive/` and creates the `meeting` star (idempotent by `fuente_id`) |
 | `/supernova` | Re-enriches an active star that has been modified |
 | `/dark-matter` | Health check: detects orphans, duplicates, missing links |
 | `/fusion` | Merges duplicate or partial stars into one |
 | `/big-bang` | Supervised bulk migration from external sources |
 
 ## Commit Convention
+
+Commits are local only. Claude never runs `push`, `pull`, `fetch`, or any command that contacts a remote.
 
 ```
 [star] description of the star created or modified
@@ -120,6 +126,7 @@ nebula → formation → active → dying → dead
 nova-vault/
 ├── CLAUDE.md              # System rules for Claude Code
 ├── nova.config.yaml       # Vault configuration (edit on install)
+├── glosario.md            # Transcription fixes and aliases (used by /nebula-process and /dark-matter)
 ├── .env.example           # Environment variables (copy to .env with your keys)
 ├── inbox/                 # Nebula — drop raw content here
 ├── stars/
@@ -135,6 +142,7 @@ nova-vault/
 │   ├── data/              # Datasets, databases, tables, pipelines
 │   ├── specs/             # Specifications and BRDs
 │   ├── runbooks/          # Operational procedures
+│   ├── documents/         # Reference sources: procedures, forms, diagrams, job descriptions
 │   └── records/           # Changelogs and Claude conversations
 ├── constellations/        # Content maps — navigate from here
 ├── templates/             # Templates by star type
@@ -145,14 +153,16 @@ nova-vault/
 ## Obsidian Configuration
 
 * **Excluded files**: add `mcp-server` under Settings → Files & Links → Excluded files
-* **Recommended plugins**: Dataview, Templater, obsidian-git, Graph Analysis
+* **Recommended plugins**: Dataview, Templater, Graph Analysis
+* **Don't install sync plugins** (obsidian-git with a remote, Obsidian Sync, cloud clients). They would take the vault off your machine.
 
 ## Tech Stack
 
 | Component | Tool |
 | --- | --- |
 | User interface | Obsidian |
-| Version control | Git + GitHub |
+| Version control | Local Git, no remote |
+| Session status | `SessionStart` hook (`.claude/hooks/vault-status.sh`), read-only |
 | Processing agent | Claude Code |
 | System rules | CLAUDE.md |
 | Reusable flows | Slash commands in `.claude/commands/` |

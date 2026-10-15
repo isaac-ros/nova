@@ -33,3 +33,8 @@ desktop.ini
 *.tmp
 *.bak
 *.swp
+
+# Claude Code (estado y configuración por máquina)
+.claude/settings.local.json
+.claude/read-ai-sync-state.json
+.claude/worktrees/

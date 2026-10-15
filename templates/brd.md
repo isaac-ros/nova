@@ -12,48 +12,93 @@ updated: YYYY-MM-DD
 author: Nombre_Apellido
 owner: Nombre_Apellido
 status: borrador | en_revision | aprobado
+confidencialidad: publica | interna | restringida
+validadores:
+  - Nombre_Apellido
 proyecto: "[[]]"
 version: "1.0"
 ---
 
 # BRD: Nombre del Proyecto / Iniciativa
 
-## Versión y Aprobaciones
+## Ficha del Documento
 
 | Campo | Detalle |
 |---|---|
+| Proyecto | Nombre del proyecto |
 | Versión | 1.0 |
-| Autor | [[Nombre_Apellido]] |
-| Aprobado por | [[Nombre_Apellido]] |
-| Fecha aprobación | YYYY-MM-DD |
+| Estado | Borrador / En revisión / Aprobado |
+| Owner | [[Nombre_Apellido]] |
+| Validadores | [[Nombre_Apellido]], [[Nombre_Apellido]] |
+| Confidencialidad | Clasificación |
+| Fecha documento | YYYY-MM-DD |
 
-## Resumen Ejecutivo
+## Control de Versiones
 
-Problema de negocio que se está resolviendo. 2-3 párrafos máximo.
+| Versión | Fecha | Autor(es) | Descripción del cambio |
+|---------|-------|-----------|------------------------|
+| 1.0 | YYYY-MM-DD | [[Nombre_Apellido]] | Versión inicial |
+
+## Aprobaciones
+
+| Rol | Nombre | Firma | Fecha |
+|-----|--------|-------|-------|
+| | [[Nombre_Apellido]] | | YYYY-MM-DD |
+
+## Objetivo
+
+Descripción del problema de negocio que se está resolviendo y cómo este proyecto lo soluciona. 2-3 párrafos máximo.
+
+### Audiencia y Entregables
+
+| Aspecto | Detalle |
+|--------|--------|
+| Audiencia | Quién consume este proyecto |
+| Tipo de entregable | Dashboard / Sistema / Reporte / Otro |
+| Confidencialidad | Clasificación de acceso |
 
 ## Contexto y Problema
 
 ¿Por qué ahora? ¿Qué cambió en el negocio o la organización que hace necesario este proyecto?
 
-## Objetivos
-
-1. Objetivo medible 1
-2. Objetivo medible 2
-
 ## Alcance
 
-### En alcance
+### Incluido en esta versión
 - 
 
 ### Fuera de alcance
 - 
 
-## Requerimientos de Negocio
+### Supuestos
+- 
+
+### Restricciones
+- 
+
+### Roadmap de futuras versiones
+
+| Versión | Funcionalidad | Notas |
+|---------|---------------|-------|
+| 2 | | |
+
+## Métricas [Solo para BRDs de Analytics/BI]
+
+| Métrica | Definición | Fórmula | Owner | Sistemas Fuente | Notas |
+|---------|-----------|--------|-------|-----------------|-------|
+| | | | [[Nombre]] | | |
+
+## Dimensiones [Solo para BRDs de Analytics/BI]
+
+| Dimensión | Descripción | Estado |
+|-----------|-------------|--------|
+| | | Cerrado / En proceso / Pendiente |
+
+## Requerimientos de Negocio [Para BRDs generales]
 
 ### Funcionales
 | ID | Requerimiento | Prioridad | Notas |
 |---|---|---|---|
-| BR-001 | | Alta | |
+| REQ-001 | | Alta | |
 
 ### No Funcionales
 | ID | Requerimiento | Criterio |
@@ -66,15 +111,7 @@ Problema de negocio que se está resolviendo. 2-3 párrafos máximo.
 |---|---|---|
 | [[Nombre_Apellido]] | Sponsor | |
 
-## Supuestos y Restricciones
-
-**Supuestos:**
-- 
-
-**Restricciones:**
-- 
-
-## Criterios de éxito
+## Criterios de Éxito
 
 - [ ] 
 

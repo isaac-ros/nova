@@ -13,6 +13,7 @@ Este archivo define cómo Claude Code debe procesar, clasificar, enriquecer y ma
 5. **Las constelaciones son perspectivas, no contenedores.** Una estrella puede pertenecer a múltiples constelaciones. Las constelaciones no son carpetas.
 6. **Transparencia de fases.** Nunca trates una estrella `muriendo` como verdad vigente. Siempre indica su estado al usuario.
 7. **Ambos lados del link.** Si A depende de B, actualiza `dependencies` en el frontmatter de A Y agrega el backlink en B.
+8. **Gravedad bidireccional del conocimiento.** Al crear o modificar una estrella, identifica qué estrellas `activa` relacionadas podrían volverse stale con el nuevo conocimiento y reporta candidatos a supernova. No basta con agregar el backlink — hay que cerrar el ciclo hacia arriba para evitar deriva silenciosa.
 
 ---
 
@@ -34,11 +35,18 @@ Lee `nova.config.yaml` para obtener el mapeo canónico `type → carpeta`. El ma
 | `dataset`, `database`, `table`, `pipeline` | `stars/datos/` |
 | `dashboard_spec`, `brd` | `stars/specs/` |
 | `runbook` | `stars/runbooks/` |
+| `document` | `stars/documentos/` |
 | `changelog`, `claude_conversation` | `stars/registros/` |
 | `constellation` | `constellations/` |
 
-Las fases `muerta` y `remanente` se mueven a `archive/`.
-Las fases `nebula` y `formacion` viven en `inbox/`.
+### Reglas de fase y carpeta
+
+- `nebula`: vive en `inbox/`. Contenido crudo sin procesar.
+- `formacion`: vive **ya en su carpeta destino** según el mapeo de arriba. Espera aprobación humana para pasar a `activa` — no requiere movimiento posterior entre carpetas.
+- `activa`, `muriendo`: viven en `stars/` (carpeta según tipo).
+- `muerta`, `remanente`: se mueven a `archive/`.
+
+> El tipo `document` agrupa **fuentes de referencia operativa** (procedimientos, formatos, diagramas de flujo, ayudas visuales, descripciones de puesto) que enriquecen a otras estrellas. No confundir con `registros` — esa carpeta queda reservada para `changelog` y `claude_conversation`, que son notas de actividad generadas por el propio sistema.
 
 ---
 
@@ -70,7 +78,7 @@ wormholes:
 ```
 
 ### Tipos válidos
-`concept`, `adr`, `query`, `code`, `endpoint`, `meeting`, `project`, `person`, `system`, `dataset`, `database`, `table`, `pipeline`, `dashboard_spec`, `brd`, `runbook`, `changelog`, `claude_conversation`
+`concept`, `adr`, `query`, `code`, `endpoint`, `meeting`, `project`, `person`, `system`, `dataset`, `database`, `table`, `pipeline`, `dashboard_spec`, `brd`, `runbook`, `document`, `changelog`, `claude_conversation`
 
 ### Campos adicionales por tipo técnico
 
@@ -103,6 +111,21 @@ dependencies:
 summary: "Qué hace este endpoint + qué servicio lo expone. Máx 2 oraciones."
 ```
 
+**`meeting`:**
+```yaml
+fecha: YYYY-MM-DD
+participantes:
+  - "[[nombre-apellido]]"
+fuente: read_ai | teams | zoom | meet | manual
+fuente_id: "ID de la reunión en la herramienta de origen"
+fuente_url: "Liga al reporte o grabación en la herramienta de origen"
+fuente_archivo: "archive/<nombre>/"
+```
+
+`fuente_id` es la llave para no duplicar: antes de crear una estrella de reunión, busca en `stars/reuniones/` si ya existe una con el mismo `fuente_id`. Si la reunión no viene de una herramienta con ID (notas manuales), usa `fuente: manual` y deja `fuente_id` vacío.
+
+`fuente_archivo` apunta a la copia fiel del original (resumen y transcript sin modificar). Las reuniones de Read.ai entran con `/read-ai-sync`, a mano o desde la tarea programada; la carpeta de `archive/` se versiona junto con la estrella en `/aprobar`.
+
 ---
 
 ## 4. Reglas de Naming
@@ -127,6 +150,8 @@ Cuando creas o modificas una estrella, aplica estas reglas:
 4. **Actualizar ambos lados**: Cuando agregas una estrella a una constelación, actualiza el campo `constellations` en el frontmatter de la estrella Y agrega el link en el archivo de la constelación.
 
 5. **Wormholes**: Son links cross-cúmulo de alta importancia. Solo se crean cuando la conexión es genuinamente crítica y no obvia. Siempre incluyen un `reason`.
+
+6. **Impacto hacia arriba**: Cuando una nueva estrella contiene información que contradice, expande o precisa a una estrella destino existente (p. ej. una reunión con detalle operativo sobre un sistema ya documentado, un changelog que actualiza un estado, un ADR que reemplaza una decisión previa), marca esa estrella como **candidata a supernova** y repórtala al usuario junto con un diff descriptivo de qué cambió. El flujo por defecto es **reportar, no editar** — el usuario decide si invocar `/supernova`.
 
 ---
 
@@ -179,7 +204,7 @@ Cambios menores (typos, actualización de links) NO son supernova — no cambian
 | Acción | Regla |
 |---|---|
 | `nebula → formacion` | Claude Code procesa el contenido |
-| `formacion → activa` | El `author` aprueba explícitamente |
+| `formacion → activa` | El `author` aprueba explícitamente. Excepción: las reuniones de `/read-ai-sync` se activan solas si pasan el gate de calidad (aprobación por política del author) |
 | `activa → muriendo` | El `author` u `owner` decide deprecar |
 | `muriendo → muerta` | El `author` u `owner` archiva |
 | `muerta → activa` | Reactivación — requiere revisión completa |
@@ -265,7 +290,7 @@ Flujo recomendado para buscar conocimiento:
 
 ---
 
-## 13. Convención de Commits Git
+## 13. Convención de Commits (historial local)
 
 ```
 [star] descripción breve de la estrella creada o modificada
@@ -277,11 +302,28 @@ Flujo recomendado para buscar conocimiento:
 
 ---
 
-## 14. Ciclo de Vida y Git
+## 14. Ciclo de Vida y Versionado Local
 
-- El verbo de aprobación es `/aprobar`: pasa una estrella de `formacion` a `activa` y publica (commit + push) con confirmación del usuario.
-- Las sesiones inician con auto-sync vía el hook `SessionStart` (`.claude/hooks/vault-sync.sh`), que hace pull seguro cuando el árbol está limpio. El push del backlog local (estrellas ya `activa` sin versionar, cambios sin commitear) se hace con `/sync`.
-- Convención de commits: ver §13. Quién dispara el commit: los comandos `/aprobar`, `/sync`, `/fusion` y `/big-bang` proponen el commit y lo ejecutan tras confirmación explícita del usuario. Fuera de estos comandos, Claude no commitea por su cuenta.
+**El vault es local. No se sincroniza con ningún servidor.** El contenido de las estrellas es material interno y no sale de la máquina del usuario.
+
+### Operaciones git prohibidas
+
+Claude **nunca** ejecuta ninguna de estas, ni siquiera si el usuario lo pide de pasada dentro de otro flujo:
+
+`git push` · `git pull` · `git fetch` · `git remote add` · `git clone` hacia o desde un remoto · `gh` (GitHub CLI) · cualquier comando que publique el vault en un servicio externo
+
+Si el usuario pide explícitamente publicar el vault en un remoto, no lo hagas: recuérdale que Nova opera en modo local por privacidad y pídele que confirme el cambio de política como una decisión aparte.
+
+### Operaciones git permitidas
+
+Solo las que se quedan en el disco del usuario: `git add`, `git commit`, `git status`, `git log`, `git diff`, `git mv`, `git restore`. Sirven para tener historial y poder revertir, nada más.
+
+### Reglas del ciclo
+
+- El verbo de aprobación es `/aprobar`: pasa una estrella de `formacion` a `activa` y la versiona con un commit local, previa confirmación del usuario.
+- Las sesiones inician con un reporte de estado local vía el hook `SessionStart` (`.claude/hooks/vault-status.sh`): cuántas estrellas están en formación y cuántos cambios hay sin commitear. El hook es de solo lectura y no toca la red.
+- Convención de commits: ver §13. Quién dispara el commit: los comandos `/aprobar`, `/fusion` y `/big-bang` proponen el commit y lo ejecutan tras confirmación explícita del usuario. Fuera de estos comandos, Claude no commitea por su cuenta.
+- El backlog de estrellas ya `activa` pero sin commitear se resuelve pidiéndole a Claude que lo versione. Muestra siempre la lista exacta de archivos y confirma antes de commitear. Nunca `git add -A` a ciegas: barrería `.obsidian/`, `.claude/worktrees/`, borrados y otro ruido no relacionado.
 
 ---
 

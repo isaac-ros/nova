@@ -1,8 +1,10 @@
 # /aprobar
 
-Pasa una estrella de `fase: formacion` a `fase: activa` y la publica (commit + push con confirmación).
+Pasa una estrella de `fase: formacion` a `fase: activa` y la versiona en el historial local (commit con confirmación).
 
 Es el verbo diario de cierre del ciclo. El usuario no necesita tocar git a mano.
+
+**El vault es local.** Este comando nunca hace `push`, `pull` ni `fetch`. Nada sale de la máquina (CLAUDE.md §14).
 
 ## Uso
 
@@ -48,13 +50,12 @@ Para cada estrella aprobada:
 - `updated`: fecha actual
 - No muevas archivos. Ya están en su carpeta destino.
 
-### 5. Publicar (commit + push con confirmación)
+### 5. Versionar en local (commit con confirmación)
 
-- `git add` SOLO de los archivos aprobados, más los archivos de constelación que hayan cambiado en este mismo flujo. Nunca `git add -A`: eso barrería `.obsidian/`, `.claude/worktrees/`, borrados y otro ruido no relacionado.
+- `git add` SOLO de los archivos aprobados, más los archivos de constelación que hayan cambiado en este mismo flujo, más la carpeta original que indique `fuente_archivo` si la estrella lo tiene (reuniones traídas por `/read-ai-sync`). Nunca `git add -A`: eso barrería `.obsidian/`, `.claude/worktrees/`, borrados y otro ruido no relacionado.
 - Mensaje de commit según la convención de CLAUDE.md §13: `[star] aprobar: <nombres o "N estrellas">`.
-- Muestra al usuario exactamente qué archivos se van a commitear y a qué remoto se empuja (`origin/main`). Pide confirmación explícita.
-- Al confirmar: `git commit` y luego `git push`.
-- Si el push falla porque el remoto está adelantado, avisa y sugiere correr `/sync` primero.
+- Muestra al usuario exactamente qué archivos se van a commitear. Pide confirmación explícita.
+- Al confirmar: `git commit`. Ahí termina. No hay push — el commit se queda en el historial local.
 
 ### 6. Cerrar el ciclo hacia arriba (gravedad bidireccional)
 
@@ -70,8 +71,7 @@ Para las estrellas recién activadas, evalúa si alguna deja stale a otra estrel
 ✦ Aprobadas: N estrellas → activa
    - [[estrella-1]] (tipo)
    - [[estrella-2]] (tipo)
-   Commit: <hash corto> "[star] aprobar: ..."
-   Push: ✓ origin/main            (o: ✗ remoto adelantado, corre /sync)
+   Commit local: <hash corto> "[star] aprobar: ..."
    Candidatos a supernova (hacia arriba): [[destino]] — razón   (o: ninguno)
    Advertencias: [author/owner en por_asignar: X · wikilinks rotos: Y]
 ```
@@ -80,5 +80,5 @@ Para las estrellas recién activadas, evalúa si alguna deja stale a otra estrel
 
 **Reglas:**
 - El usuario aprueba. Claude nunca auto-aprueba.
-- `/aprobar` solo toca estrellas en `formacion`. El backlog de estrellas ya `activa` pero sin versionar se resuelve con `/sync`.
-- El push requiere credenciales configuradas en la máquina. Si falla la autenticación, reporta y pide al usuario configurarlas. No manejes credenciales.
+- `/aprobar` solo toca estrellas en `formacion`. El backlog de estrellas ya `activa` pero sin commitear se resuelve pidiéndole a Claude que lo versione — mismo criterio: lista exacta de archivos y confirmación antes de commitear.
+- Nunca `push`, `pull`, `fetch` ni ningún comando que contacte un remoto. El vault no se publica en ningún servicio externo.

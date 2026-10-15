@@ -88,7 +88,7 @@ Para aprobar individual: /aprobar [nombre-archivo]
 
 ### Fase 5: Aprobación en bulk
 
-La aprobación en bulk del batch se delega a `/aprobar todas` — ese comando cambia `fase: formacion → activa` en su lugar (los archivos ya están en su carpeta destino desde `/nebula-process`, no se mueven de nuevo), y hace el commit + push del lote con confirmación.
+La aprobación en bulk del batch se delega a `/aprobar todas` — ese comando cambia `fase: formacion → activa` en su lugar (los archivos ya están en su carpeta destino desde `/nebula-process`, no se mueven de nuevo), y hace el commit local del lote con confirmación.
 
 ### Fase 6: Reporte final
 
@@ -107,7 +107,7 @@ La aprobación en bulk del batch se delega a `/aprobar todas` — ese comando ca
 ## Próximos pasos sugeridos
 1. Ejecutar /dark-matter para detectar conexiones faltantes entre las nuevas estrellas
 2. Revisar las X estrellas pendientes de aprobación (`fase: formacion`, ya en su carpeta destino) — usar `/aprobar`
-3. El commit del lote se hace vía `/aprobar todas`; convención: [star] aprobar: N estrellas
+3. El commit local del lote se hace vía `/aprobar todas`; convención: [star] aprobar: N estrellas
 ```
 
 ---
@@ -115,6 +115,7 @@ La aprobación en bulk del batch se delega a `/aprobar todas` — ese comando ca
 **Reglas:**
 - El Big Bang nunca corre desatendido. Cada lote requiere confirmación.
 - Los archivos originales en la fuente NO se eliminan — son la copia de seguridad.
+- Todo el procesamiento es local. El lote nunca se publica en un remoto (CLAUDE.md §14).
 - Si un archivo ya existe en el vault (mismo nombre o contenido idéntico), reportarlo como posible duplicado antes de procesar. No crear duplicados silenciosamente.
 - Máximo recomendado por sesión de Big Bang: 50-100 archivos. Para volúmenes mayores, dividir en sesiones.
 - Contenido sensible: se acepta en el vault sin filtrado.

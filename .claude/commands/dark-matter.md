@@ -63,6 +63,15 @@ Busca pares de estrellas de diferentes `cumulo` que se referencian entre sí per
 
 Por ahora: busca estrellas de `stars/consultas/` que referencian a `stars/sistemas/` — estas conexiones son candidatas a wormholes.
 
+### Check 8: Errores de transcripción (glosario)
+
+Si existe `glosario.md` en la raíz, busca en `stars/` y `constellations/` los errores de las secciones confirmadas (columna "Errores"). Ignora las líneas que documentan correcciones (las que empiezan con `> Correcciones de transcripción` o `> Nota`). No busques en `archive/`: ahí viven las transcripciones crudas como registro original.
+
+- Errores con regla `auto`: repórtalos como corrección directa.
+- Errores con regla `contextual`: repórtalos con la línea de contexto para que el usuario decida.
+
+No corrijas nada desde este check; solo reporta.
+
 ---
 
 ## Formato del reporte
@@ -103,6 +112,10 @@ Por ahora: busca estrellas de `stars/consultas/` que referencian a `stars/sistem
 
 ## 🟢 Wormholes sugeridos (X)
 - [[query-ventas]] ↔ [[Sistema_ERP]] — conexión directa no documentada como wormhole
+
+## 🟡 Errores de transcripción (X)
+- [[estrella]]: "Variante" → Correcto (auto)
+- [[estrella]]: "Variante" → ¿Correcto? (contextual) — línea de contexto
 
 ---
 

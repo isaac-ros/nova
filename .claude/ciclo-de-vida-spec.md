@@ -1,6 +1,15 @@
 # Spec: cierre del ciclo de vida de estrellas en Nova
 
-Documento de diseño. Estado: propuesta para revisión de Isaac. No se ha modificado ningún prompt todavía.
+> [!warning] Documento histórico — parcialmente superado
+> Este spec se escribió cuando el vault sincronizaba con un remoto en GitHub. Desde **2026-07-31 Nova opera en modo local**: sin remoto, sin `push`, sin `pull`, sin `fetch`.
+>
+> Lo que ya no aplica de este documento: el paso 5 de `/aprobar` (push), toda la sección 3 (hook de sync con `git fetch`/`git pull`, reemplazado por `.claude/hooks/vault-status.sh`), toda la sección 4 (comando `/sync`, eliminado) y las menciones a `origin/main` y credenciales.
+>
+> Lo que sigue vigente: el diseño de `/aprobar` (pasos 1-4, 6, 7), los fixes de consistencia de la sección 5, y el bloque `health_thresholds` de la sección 6.
+>
+> **La fuente de verdad del comportamiento actual es `CLAUDE.md` §14.** Este archivo se conserva solo como registro de diseño.
+
+Documento de diseño. Estado: implementado y luego revisado por la política de operación local.
 
 Autor del spec: Claude Code · Fecha: 2026-07-24
 
@@ -62,7 +71,7 @@ Una estrella `activa` es fuente de verdad, así que valida lo mínimo antes de p
 - Frontmatter obligatorio completo: `type`, `fase`, `tags`, `cumulo`, `created`, `updated`, `author`, `owner`.
 - `author` / `owner`: si están en `por_asignar`, adviértelo (no bloquea). Nota: hoy ~40% del vault los tiene en placeholder.
 - Constelación: al menos una en `constellations`, o el tag `sin-constelacion` (regla CLAUDE.md §5.2).
-- Wikilinks del cuerpo: que resuelvan a un archivo existente. Reporta rotos (ejemplo actual: `[[fernando-urrutia]]`).
+- Wikilinks del cuerpo: que resuelvan a un archivo existente. Reporta rotos (p. ej. `[[nombre-persona]]`).
 
 Si algo falla, repórtalo y pregunta: aprobar de todas formas o corregir primero. Nunca auto-corrijas contenido sustantivo sin permiso.
 
@@ -277,7 +286,7 @@ Mantener mínima. No renumerar secciones existentes para no romper las referenci
 Estos no son de prompt sino de higiene. Los listo para decidir aparte:
 
 - Templates con `fase` por defecto inconsistente: `person`, `system`, `runbook`, `database`, `table`, `changelog`, `claude_conversation`, `constellation` arrancan en `activa`; el resto en `formacion`. Normalizar a `formacion` (salvo `changelog`/`claude_conversation`, que son registros generados por el sistema) evita que una estrella creada a mano desde template se salte el gate de aprobación.
-- Wikilink roto `[[fernando-urrutia]]` referenciado en 13 archivos: la persona nunca se creó. Crear la estrella o corregir los links.
+- Wikilink roto `[[nombre-persona]]` referenciado en 13 archivos: la persona nunca se creó. Crear la estrella o corregir los links.
 - ~14 archivos crudos sueltos en la raíz del repo y en `archive/`: moverlos a `inbox/` para procesarlos con `/nebula-process`, o descartarlos.
 - `author`/`owner: por_asignar` en ~40% de las estrellas: campaña de asignación aparte.
 

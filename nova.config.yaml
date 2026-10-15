@@ -21,6 +21,7 @@ type_folder_map:
   dashboard_spec:      stars/specs
   brd:                 stars/specs
   runbook:             stars/runbooks
+  document:            stars/documentos
   changelog:           stars/registros
   claude_conversation: stars/registros
 
@@ -79,3 +80,13 @@ chunked_index_types:
   - claude_conversation
   - system
   - person
+  - document
+
+# Sincronización de reuniones de Read.ai (usada por /read-ai-sync y la tarea programada)
+read_ai_sync:
+  owner: Nombre_Apellido       # author/owner de las estrellas creadas
+  ventana_inicial_dias: 14     # alcance de la primera corrida, sin estado previo
+  solape_horas: 48             # re-revisa este margen antes de la última corrida (Read.ai tarda en procesar)
+  duracion_minima_min: 5       # reuniones más cortas se omiten
+  asistentes_minimos: 2        # con menos asistentes reales se omite (sesiones donde nadie llegó)
+  excluir_titulos: []          # patrones de título a ignorar, p. ej. ["personal", "1:1 médico"]

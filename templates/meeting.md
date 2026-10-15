@@ -14,6 +14,10 @@ fecha: YYYY-MM-DD
 participantes:
   - "[[Nombre_Apellido]]"
 proyecto: "[[]]"
+fuente: read_ai | teams | zoom | meet | manual
+fuente_id: ""
+fuente_url: ""
+fuente_archivo: ""
 ---
 
 # Reunión: Título — YYYY-MM-DD

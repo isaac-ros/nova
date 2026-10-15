@@ -1,9 +1,19 @@
 {
+  "permissions": {
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote:*)",
+      "Bash(git clone:*)",
+      "Bash(gh:*)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/vault-sync.sh" }
+          { "type": "command", "command": "bash .claude/hooks/vault-status.sh" }
         ]
       }
     ]
